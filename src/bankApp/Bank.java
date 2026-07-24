@@ -8,7 +8,7 @@ public class Bank {
 
     public Account registerCustomer(String name, int pin){
         String newAccountNumber = generateAccountNumber();
-        Account account = new Account(pin,"","",newAccountNumber);
+        Account account = new Account(pin, name, "", newAccountNumber);
         accounts.add(account);
         return account;
     }
@@ -38,27 +38,41 @@ public class Bank {
         return serialNumber + subtract;
     }
 
-    public Account findAccount(int accountNumber) {
-        int targetIndex = accountNumber - 1;
-        if (targetIndex >= 0 && targetIndex < accounts.size()) {
-            return accounts.get(targetIndex);
+    public Account findAccount(String accountNumber) {
+        for (Account account : accounts) {
+            if (account.getAccountNumber().equals(accountNumber)) {
+                return account;
+            }
         }
-        return new Account(1234,"","","");
+        return null;
     }
 
-    public void deposit(int accountNumber, double amount){
+    public void deposit(String accountNumber, double amount){
         Account targetAccount = findAccount(accountNumber);
-        targetAccount.depositMoney(amount);
+        if (targetAccount != null) {
+            targetAccount.depositMoney(amount);
+        } else {
+            System.out.println("Account not found!");
+        }
     }
 
-    public void withdraw(int accountNumber, double amount, int pin) {
+    public void withdraw(String accountNumber, double amount, int pin) {
         Account targetAccount = findAccount(accountNumber);
-        targetAccount.withdrawal(amount, pin);
+        if (targetAccount != null) {
+            targetAccount.withdrawal(amount, pin);
+        } else {
+            System.out.println("Account not found!");
+        }
     }
 
-    public void transfer(int senderAccountNumber, int receiverAccountNumber, double amount, int pin) {
+    public void transfer(String senderAccountNumber, String receiverAccountNumber, double amount, int pin) {
         Account sender = findAccount(senderAccountNumber);
         Account receiver = findAccount(receiverAccountNumber);
+
+        if (sender == null || receiver == null) {
+            System.out.println("Sender or Receiver account not found!");
+            return;
+        }
 
         double initialBalance = sender.getBalance();
         sender.withdrawal(amount, pin);

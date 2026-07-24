@@ -4,27 +4,21 @@ import java.util.Scanner;
 
 public class MainApp {
     private static Scanner input = new Scanner(System.in);
-
-    private static String accountName = "";
-    private static int accountPin = 0;
-    private static double accountBalance = 0.0;
-    private static boolean isAccountCreated = false;
-
     private static Bank bank = new Bank();
 
     public static void main(String[] args) {
         while (true) {
             System.out.print("""
             
-            ===============================
-                 WELCOME TO THE BANK APP   
-            ===============================
+            ===========================================
+                 WELCOME TO THE SEUNFUNMI'S BANK APP   
+            ===========================================
             1 -> Create Account
             2 -> Deposit Money
             3 -> Withdraw Money
             4 -> Check Balance
             5 -> Exit Application
-            ===============================
+            ===========================================
             Enter your option:\s""");
 
             int choice = input.nextInt();
@@ -55,77 +49,69 @@ public class MainApp {
     private static void createAccount() {
         System.out.print("Enter account name: ");
         input.nextLine();
-        accountName = input.nextLine();
+        String accountName = input.nextLine();
 
         System.out.print("Enter your 4-digit PIN: ");
-        accountPin = input.nextInt();
-
-        accountBalance = 0.0;
-        isAccountCreated = true;
-        System.out.println("Account created successfully for " + accountName + "!");
+        int accountPin = input.nextInt();
 
         Account newAccount = bank.registerCustomer(accountName, accountPin);
+        System.out.println("Account created successfully for " + accountName + "!");
         System.out.println("Your 10-digit NUBAN Account Number is: " + newAccount.getAccountNumber());
     }
 
     private static void deposit() {
-        if (!isAccountCreated) {
-            System.out.println("Error: Please create an account first!");
-            return;
-        }
+        System.out.print("Enter 10-digit Account Number: ");
+        String accountNumber = input.next();
 
         System.out.print("Enter amount to deposit: ₦");
         double amount = input.nextDouble();
 
-        if (amount > 0) {
-            accountBalance = accountBalance + amount;
-            System.out.println("Successfully deposited ₦" + amount);
-        } else {
+        if (amount <= 0) {
             System.out.println("Invalid amount! You cannot deposit negative money.");
+            return;
+        }
+
+        Account account = bank.findAccount(accountNumber);
+        if (account != null) {
+            bank.deposit(accountNumber, amount);
+            System.out.println("Successfully deposited ₦" + amount + " into account " + accountNumber);
+        } else {
+            System.out.println("Error: Account number does not exist!");
         }
     }
 
     private static void withdraw() {
-        if (!isAccountCreated) {
-            System.out.println("Error: Please create an account first!");
+        System.out.print("Enter 10-digit Account Number: ");
+        String accountNumber = input.next();
+
+        Account account = bank.findAccount(accountNumber);
+        if (account == null) {
+            System.out.println("Error: Account number does not exist!");
             return;
         }
 
         System.out.print("Enter your PIN: ");
         int enteredPin = input.nextInt();
-
-        if (enteredPin != accountPin) {
-            System.out.println("Wrong PIN! Transaction cancelled.");
-            return;
-        }
 
         System.out.print("Enter amount to withdraw: ₦");
         double amount = input.nextDouble();
 
-        if (amount > accountBalance) {
-            System.out.println("Insufficient funds! Your balance is lower than ₦" + amount);
-        } else if (amount <= 0) {
-            System.out.println("Invalid amount!");
-        } else {
-            accountBalance = accountBalance - amount;
-            System.out.println("Successfully withdrew ₦" + amount);
-        }
+        bank.withdraw(accountNumber, amount, enteredPin);
     }
 
     private static void checkBalance() {
-        if (!isAccountCreated) {
-            System.out.println("Error: Please create an account first!");
+        System.out.print("Enter 10-digit Account Number: ");
+        String accountNumber = input.next();
+
+        Account account = bank.findAccount(accountNumber);
+        if (account == null) {
+            System.out.println("Error: Account number does not exist!");
             return;
         }
 
         System.out.print("Enter your PIN: ");
         int enteredPin = input.nextInt();
 
-        if (enteredPin != accountPin) {
-            System.out.println("Wrong PIN! Cannot show balance.");
-            return;
-        }
-
-        System.out.println("Hello " + accountName + ", your current balance is: ₦" + accountBalance);
+        System.out.println("Current balance for account " + accountNumber + " is: ₦" + account.getBalance());
     }
 }
