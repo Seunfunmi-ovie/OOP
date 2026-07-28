@@ -12,7 +12,7 @@ public class Bank {
 
     public Account registerCustomer(String name, int pin){
         String newAccountNumber = generateAccountNumber();
-        Account account = new Account(pin, name, "Donwa", newAccountNumber);
+        Account account = new Account(pin, name, "UserName", newAccountNumber);
         accounts.add(account);
         return account;
     }
