@@ -11,13 +11,14 @@ public class MainApp {
             System.out.print("""
             
             ===========================================
-                 WELCOME TO THE SEUNFUNMI'S BANK APP   
+                 WELCOME TO THE SEUNFUNMI'S BANK APP
             ===========================================
             1 -> Create Account
             2 -> Deposit Money
             3 -> Withdraw Money
             4 -> Check Balance
-            5 -> Exit Application
+            5 -> Transfer
+            6 -> Exit Application
             ===========================================
             Enter your option:\s""");
 
@@ -37,6 +38,9 @@ public class MainApp {
                     checkBalance();
                     break;
                 case 5:
+                    transfer();
+                    break;
+                case 6:
                     System.out.println("Thank you for using our Bank App. Goodbye!");
                     System.exit(0);
                     break;
@@ -82,7 +86,8 @@ public class MainApp {
 
     private static void withdraw() {
         System.out.print("Enter 10-digit Account Number: ");
-        String accountNumber = input.next();
+        input.nextLine();
+        String accountNumber = input.nextLine();
 
         Account account = bank.findAccount(accountNumber);
         if (account == null) {
@@ -103,15 +108,34 @@ public class MainApp {
         System.out.print("Enter 10-digit Account Number: ");
         String accountNumber = input.next();
 
-        Account account = bank.findAccount(accountNumber);
-        if (account == null) {
-            System.out.println("Error: Account number does not exist!");
-            return;
-        }
-
         System.out.print("Enter your PIN: ");
         int enteredPin = input.nextInt();
 
-        System.out.println("Current balance for account " + accountNumber + " is: ₦" + account.getBalance());
+        try {
+            double currentBalance = bank.checkBalance(accountNumber, enteredPin);
+            System.out.println("Current balance for account " + accountNumber + " is: ₦" + currentBalance);
+        } catch (IllegalArgumentException error) {
+            System.out.println("Error: " + error.getMessage());
+        }
+    }
+
+    private static void transfer(){
+        System.out.print("Enter Sender's Account Number: ");
+        String senderAccountNumber = input.next();
+
+        System.out.print("Enter your PIN: ");
+        int enterPin = input.nextInt();
+
+        System.out.print("Enter Reciever's Account Number: ");
+        String receiverAccountNumber = input.next();
+
+        System.out.print("Enter amount: ");
+        double amount = input.nextDouble();
+
+        System.out.print("Transanction Successful");
+
+        bank.transfer(senderAccountNumber,receiverAccountNumber, amount, enterPin);
+
+
     }
 }

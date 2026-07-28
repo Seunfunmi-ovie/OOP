@@ -26,10 +26,15 @@ public class Account {
         balance = balance + amount;
     }
 
-    public double getBalance(){
+    public double getBalance(int enterPin) {
+
+        if (enterPin != this.pin) {
+
+            throw new IllegalArgumentException("Incorrect Pin");
+
+        }
         return balance;
     }
-
     public void withdrawal(double amount, int enterPin ){
         if(enterPin == this.pin && amount <= balance){
             balance = balance - amount;

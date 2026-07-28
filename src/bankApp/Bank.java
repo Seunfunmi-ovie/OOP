@@ -1,4 +1,5 @@
 package bankApp;
+
 import java.util.ArrayList;
 
 public class Bank {
@@ -6,9 +7,12 @@ public class Bank {
     private final String bankCode = "011";
     private ArrayList<Account> accounts = new ArrayList<>();
 
+    public Bank() {
+    }
+
     public Account registerCustomer(String name, int pin){
         String newAccountNumber = generateAccountNumber();
-        Account account = new Account(pin, name, "", newAccountNumber);
+        Account account = new Account(pin, name, "Donwa", newAccountNumber);
         accounts.add(account);
         return account;
     }
@@ -71,13 +75,17 @@ public class Bank {
 
         if (sender == null || receiver == null) {
             System.out.println("Sender or Receiver account not found!");
-            return;
-        }
-
-        double initialBalance = sender.getBalance();
-        sender.withdrawal(amount, pin);
-        if (sender.getBalance() < initialBalance) {
+        } else if (amount <= sender.getBalance(pin)) {
+            sender.withdrawal(amount, pin);
             receiver.depositMoney(amount);
         }
+    }
+
+    public double checkBalance(String accountNumber, int pin){
+        Account account = findAccount(accountNumber);
+        if(account == null){
+            throw new IllegalArgumentException("Account not found");
+        }
+        return account.getBalance(pin);
     }
 }

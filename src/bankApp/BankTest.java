@@ -21,7 +21,7 @@ class BankTest {
         myBank.deposit(accountNumber, 1245.00);
 
         Account foundAccount = myBank.findAccount(accountNumber);
-        assertEquals(1245.00, foundAccount.getBalance());
+        assertEquals(1245.00, foundAccount.getBalance(1234));
     }
 
     @Test
@@ -54,7 +54,7 @@ class BankTest {
         myBank.withdraw(accountNumber, 2000.00, 2358);
 
         Account foundAccount = myBank.findAccount(accountNumber);
-        assertEquals(3000.00, foundAccount.getBalance());
+        assertEquals(3000.00, foundAccount.getBalance(1234));
     }
 
     @Test
@@ -67,7 +67,7 @@ class BankTest {
         myBank.withdraw(accountNumber, 2000.00, 9999);
 
         Account foundAccount = myBank.findAccount(accountNumber);
-        assertEquals(5000.00, foundAccount.getBalance());
+        assertEquals(5000.00, foundAccount.getBalance(1234));
     }
 
     @Test
@@ -84,8 +84,8 @@ class BankTest {
 
         Account sender = myBank.findAccount(senderNum);
         Account receiver = myBank.findAccount(receiverNum);
-        assertEquals(6000.00, sender.getBalance());
-        assertEquals(4000.00, receiver.getBalance());
+        assertEquals(6000.00, sender.getBalance(1234));
+        assertEquals(4000.00, receiver.getBalance(1234));
     }
 
     @Test
@@ -102,7 +102,7 @@ class BankTest {
 
         Account sender = myBank.findAccount(senderNum);
         Account receiver = myBank.findAccount(receiverNum);
-        assertEquals(10000.00, sender.getBalance());
-        assertEquals(0, receiver.getBalance());
+        assertEquals(10000.00, sender.getBalance(1234));
+        assertEquals(0.00, receiver.getBalance(1234));
     }
 }
