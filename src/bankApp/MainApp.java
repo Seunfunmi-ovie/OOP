@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class MainApp {
     private static Scanner input = new Scanner(System.in);
-    private static Bank bank = new Bank();
+    private static Bank bank = new Bank("GTBank");
 
     public static void main(String[] args) {
         while (true) {
@@ -51,15 +51,18 @@ public class MainApp {
     }
 
     private static void createAccount() {
-        System.out.print("Enter account name: ");
+        System.out.print("Enter first name: ");
         input.nextLine();
-        String accountName = input.nextLine();
+        String firstName = input.nextLine();
+
+        System.out.print("Enter last name: ");
+        String lastName = input.nextLine();
 
         System.out.print("Enter your 4-digit PIN: ");
         int accountPin = input.nextInt();
 
-        Account newAccount = bank.registerCustomer(accountName, accountPin);
-        System.out.println("Account created successfully for " + accountName + "!");
+        Account newAccount = bank.registerCustomer(firstName, lastName, accountPin);
+        System.out.println("Account created successfully for " + firstName + " " + lastName + "!");
         System.out.println("Your 10-digit NUBAN Account Number is: " + newAccount.getAccountNumber());
     }
 
@@ -86,8 +89,7 @@ public class MainApp {
 
     private static void withdraw() {
         System.out.print("Enter 10-digit Account Number: ");
-        input.nextLine();
-        String accountNumber = input.nextLine();
+        String accountNumber = input.next();
 
         Account account = bank.findAccount(accountNumber);
         if (account == null) {
@@ -102,6 +104,7 @@ public class MainApp {
         double amount = input.nextDouble();
 
         bank.withdraw(accountNumber, amount, enteredPin);
+        System.out.println("Withdrawal operation completed.");
     }
 
     private static void checkBalance() {
@@ -119,23 +122,20 @@ public class MainApp {
         }
     }
 
-    private static void transfer(){
+    private static void transfer() {
         System.out.print("Enter Sender's Account Number: ");
         String senderAccountNumber = input.next();
 
         System.out.print("Enter your PIN: ");
         int enterPin = input.nextInt();
 
-        System.out.print("Enter Reciever's Account Number: ");
+        System.out.print("Enter Receiver's Account Number: ");
         String receiverAccountNumber = input.next();
 
-        System.out.print("Enter amount: ");
+        System.out.print("Enter amount: ₦");
         double amount = input.nextDouble();
 
-        System.out.print("Transanction Successful");
-
-        bank.transfer(senderAccountNumber,receiverAccountNumber, amount, enterPin);
-
-
+        bank.transfer(senderAccountNumber, receiverAccountNumber, amount, enterPin);
+        System.out.println("Transfer processing completed.");
     }
 }
